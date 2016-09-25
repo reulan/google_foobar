@@ -1,0 +1,56 @@
+#/usr/bin/python env
+#bunny_prisoner_locating.py
+#mpmsimo
+#9/23/16
+
+import sys
+import math
+
+def answer(x, y):
+    """Dynamically create a matrix at will until bunny is identified."""
+    # Create counters for use with maths!
+    min_num = 1
+    max_num = 100000
+    prisoner_count = 1
+    x_bunny = 0 # Length of list
+    y_bunny = 0 # Amount of lists
+
+    print('Searching for bunny in cell ({xn},{yn}).'.format(xn=x, yn=y))
+
+    matrix = [] # Will add additional lists later
+
+    # Dynamically label bunnies with ID's (Always add new Y-axis list)
+    if not matrix:
+        matrix.append([prisoner_count])
+        print('[0] Bunny #{n} has been jailed in({xi},{yi})'.format(n=prisoner_count, xi=min_num, yi=y_bunny+1))
+        prisoner_count += 1
+        y_bunny += 1
+
+    # Add a new list to matrix (represents y-axis)
+    for y_bunny in xrange(min_num-1, max_num-1):
+        matrix.append([prisoner_count])
+        print('[1] Bunny #{n} has been jailed in ({xi},{yi})'.format(n=prisoner_count, xi=x_bunny+1, yi=y_bunny+1))
+        prisoner_count += 1
+        y_bunny += 1
+
+        # For each existing list, append a value (represents x-axis)
+        for x_bunny in xrange(min_num-1, y_bunny):
+            matrix[x_bunny].append(prisoner_count)
+            print('[2] Bunny #{n} has been jailed in ({xi},{yi})'.format(n=prisoner_count, xi=x_bunny+1, yi=y_bunny+1))
+            prisoner_count += 1
+        try:
+            prisoner_id = str(matrix[x-1][y-1])
+            #print('Bunny #{n} has been jailed'.format(n=prisoner_count))
+            print('Bunny in cell ({xn},{yn}) has ID {pid}.\n'.format(xn=x, yn=y, pid=str(int(prisoner_id)-1)))
+            return str(int(prisoner_id)-1) # Remove last increment to reveal true ID
+        except IndexError as ie:
+            continue
+
+if __name__ == '__main__':
+    answer(1, 1)
+    answer(2, 1)
+    answer(1, 2)
+    answer(3, 2)
+    answer(5, 10)
+    #answer(10,10)
+    #answer(100,100)

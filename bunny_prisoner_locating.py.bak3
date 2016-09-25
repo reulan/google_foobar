@@ -1,0 +1,87 @@
+#/usr/bin/python env
+#bunny_prisoner_locating.py
+#mpmsimo
+#9/23/16
+# Time limit exceeded
+
+# Create counters (global vars) for use with maths!
+prisoner_count = 1 # Pretty lame way to track prisoner count
+
+def create_matrix():
+    """Create a matrix object."""
+    matrix = [] # Will add additional lists later
+    if not matrix:
+        matrix.append([prisoner_count])
+        increment_prisoner_count()
+    return matrix
+
+def increment_prisoner_count():
+    """Adds one to bunny prisoner count. ;("""
+    global prisoner_count
+    prisoner_count += 1
+
+def increment_cell_row(matrix):
+    """Adds an additional row (list) to matrix, to represent total y value."""
+    matrix.append([prisoner_count])
+    #print('Added {pc} to new column: {c}'.format(pc=prisoner_count, c=[prisoner_count]))
+    increment_prisoner_count()
+    return matrix
+
+def increment_cell_column(matrix, cell_column_length):
+    """Adds a additional column to each list, representing x value."""
+    for cc in reversed(xrange(cell_column_length)):
+        matrix[cc].append(prisoner_count)
+        #print('Appened {pc} to new row: {m}'.format(pc=prisoner_count, m=matrix[cc]))
+        increment_prisoner_count()
+
+def locate_cell(x, y, matrix):
+    """Locates a cell where a poor bunny is held captive."""
+    min_pid = 1
+    max_pid = 100000
+
+    # Since matrix is an upside down triangle, accomodate to it.
+    prisoner_id = matrix[y-1][x-1]
+
+    if min_pid <= prisoner_id <= max_pid:
+        #print('Bunny in cell ({xn},{yn}) has ID {pid}.\n'.format(xn=x, yn=y, pid=str(int(prisoner_id))))
+        return str(int(prisoner_id)) # Remove last increment to reveal true ID
+    else:
+        pass
+        #print('Invalid bunny prisoner ID.')
+
+def store_matrix(matrix):
+    """Store matrix so answer function can be run multiple times without creating a new matrix."""
+    if matrix
+
+def answer(x, y):
+    """Dynamically create a matrix at will until bunny is identified."""
+    bunny_found = False
+    matrix = create_matrix()
+    cell_column_length = len(matrix) # Length of list (x-axis)
+    cell_row_length = len(matrix[0]) # Amount of lists (y-axis)
+
+    while not bunny_found:
+        for i in xrange(cell_column_length):
+            increment_cell_row(matrix)
+            cell_row_length = len(matrix[0]) # Amount of lists (y-axis)
+            increment_cell_column(matrix, cell_column_length)
+            cell_column_length = len(matrix) # Length of list (x-axis)
+
+            #print('Searching for bunny in cell ({xn},{yn}).'.format(xn=x, yn=y))
+            #print('Matrix:\n{m}\n'.format(m=matrix))
+            #print('\n'.join([''.join(['{:4}'.format(item) for item in row]) for row in matrix]))
+
+            try:
+                pid = locate_cell(x, y, matrix)
+                if pid != None:
+                    bunny_found = True
+                    global prisoner_count
+                    prisoner_count = 1
+                    return pid
+            except Exception as e:
+                continue
+
+if __name__ == '__main__':
+    answer(2,2)
+    answer(3,2)
+    answer(5,10)

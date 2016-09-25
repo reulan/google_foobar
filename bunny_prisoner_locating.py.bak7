@@ -2,7 +2,6 @@
 #bunny_prisoner_locating.py
 #mpmsimo
 #9/24/16
-# Time limit exceeded
 
 import time
 
@@ -107,6 +106,5 @@ if __name__ == '__main__':
     answer(12, 73)
     answer(300, 300)
     answer(200, 200)
-    answer(129,319)
 
     print("--- %s seconds ---" % (time.time() - start_time))

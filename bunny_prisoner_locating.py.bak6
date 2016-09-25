@@ -2,11 +2,6 @@
 #bunny_prisoner_locating.py
 #mpmsimo
 #9/24/16
-# Time limit exceeded
-
-import time
-
-start_time = time.time()
 
 class Point(object):
     """Creates a point class matching a coordinate and including prisoner_id."""
@@ -36,36 +31,29 @@ class Point(object):
     def change_pid(self, pid):
         if 1 <= pid <= 100000:
             self.pid = pid
-        else:
-            self.pid = -1
 
     def get_pid(self):
         return str(self.pid)
 
 def locate_bunny(b, x, y):
     """Attempts to locate a bunny in a cell row."""
+    print('Searching for bunny in cell ({xi}, {yi})'.format(xi=x, yi=y))
     if b.x == y and b.y == x:
         return b.get_pid()
     else:
         return
 
-def verify_possibility(x):
-    """Verfies if the coordinate given will fall within bounds."""
-    # Sorry for the hack google :(
-    if x > 319:
-        return False
-    else:
-        return True
+def print_row_prisoners(cr):
+    """For debug purposes print each bunny prisoner."""
+    for p in cr:
+        print('Point: {po}\npid: {ppid}\n'.format(po=p, ppid=p.pid))
+        #print('Point: {po}\nx: {px}\ny: {py}\npid: {ppid}\n'.format(po=p, px=p.x, py=p.y, ppid=p.pid))
 
 def answer(x, y):
     """Given a coordinate, determine prisoner ID range, and give ID."""
     prisoner_count = 1
     bunny_found = False
     cell_row = [] # This will be a list of points that rewrites itself to avoid memory error?
-
-    is_possible = verify_possibility(x)
-    if not is_possible:
-        return
 
     # Lock up the first bunny
     if len(cell_row) == 0:
@@ -75,9 +63,12 @@ def answer(x, y):
         cell_row = [p]
 
     # Figure out how many points are before this coord, and return int.
-    while not bunny_found and is_possible:
+    while not bunny_found:
         # Search for bunny, and checks if it exists.
+        print('Before: ')
+        print_row_prisoners(cell_row)
         try:
+            print('Looking through current cell row to find bunny.')
             for bunny in cell_row:
                 pid = locate_bunny(bunny, x, y)
                 if pid != None:
@@ -85,28 +76,38 @@ def answer(x, y):
                     print('Bunny {bpid} located at ({xi}, {yi})'.format(bpid=pid, xi=bunny.x, yi=bunny.y))
                     return pid
         except Exception as e:
+            print('Could not find bunny')
             pass
 
         # If the cell row has one or follow a pattern
         if len(cell_row) >= 1:
             # Create new cell for bunny, add to beginning of list (at end)
+            # Add (len(cell_row)+1), y)
+            #if b == cell_row[0]:
+            #first_bunny_in_row = Point((b.x + 1), 1)
             first_bunny_in_row = Point((cell_row[0].x + 1), 1)
+            #first_bunny_in_row = Point((b.y + 1), 1)
             first_bunny_in_row.change_pid(prisoner_count)
             prisoner_count += 1
+            #cell_row.pop(0)
             cell_row.insert(0, first_bunny_in_row)
-            # Modify remaining list (not element 0)
             for b in cell_row[1:]:
+                # for each point in row add 1 to x-value of point
+                #else:
                 prev_y = b.y
                 b.change_y(int(b.y + 1))
+                #prev_x = b.x
+                #b.change_x(int(b.x + 1))
                 b.change_pid(prisoner_count)
                 prisoner_count += 1
+                print('changed y value from {py} to {cy}'.format(py=prev_y, cy=p.y))
+                #print('changed x value from {px} to {cx}'.format(px=prev_x, cx=p.x))
+            #cell_row.insert(0, first_bunny_in_row)
+            print('After: ')
+            print_row_prisoners(cell_row)
 
 if __name__ == '__main__':
-    answer(1000,1000)
-    answer(129,319)
-    answer(12, 73)
-    answer(300, 300)
-    answer(200, 200)
-    answer(129,319)
-
-    print("--- %s seconds ---" % (time.time() - start_time))
+    answer(1,1)
+    answer(2,2)
+    answer(3,2)
+    answer(5,10)
