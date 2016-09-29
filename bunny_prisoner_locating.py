@@ -49,10 +49,10 @@ def locate_bunny(b, x, y):
     else:
         return
 
-def verify_possibility(x):
+def verify_possibility(x, y):
     """Verfies if the coordinate given will fall within bounds."""
     # Sorry for the hack google :(
-    if x > 319:
+    if x < 1 or x > 319 or y < 1:
         return False
     else:
         return True
@@ -63,7 +63,7 @@ def answer(x, y):
     bunny_found = False
     cell_row = [] # This will be a list of points that rewrites itself to avoid memory error?
 
-    is_possible = verify_possibility(x)
+    is_possible = verify_possibility(x, y)
     if not is_possible:
         return
 
@@ -108,5 +108,7 @@ if __name__ == '__main__':
     answer(300, 300)
     answer(200, 200)
     answer(129,319)
+    answer(-1, 50)
+    answer(-33000, 3344)
 
     print("--- %s seconds ---" % (time.time() - start_time))
